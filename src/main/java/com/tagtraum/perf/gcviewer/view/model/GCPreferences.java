@@ -6,6 +6,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -50,6 +54,9 @@ public class GCPreferences {
     private static final int WINDOW_HEIGHT_DEFAULT = 600;
     private static final int WINDOW_X_DEFAULT = 0;
     private static final int WINDOW_Y_DEFAULT = 0;
+
+    private static final String GCLOG_START_DATETIME = "gclog.startdatetime";
+    public static final SimpleDateFormat GC_LOG_FILE_START_DATE_FORMAT = new SimpleDateFormat("mm.DD.yyyy HH:mm:ss");
     
     private static final Logger LOGGER = Logger.getLogger(GCPreferences.class.getName());
 
@@ -75,7 +82,7 @@ public class GCPreferences {
             }
         }
     }
-    
+
     /**
      * Loads properties from a file.
      */
@@ -84,7 +91,7 @@ public class GCPreferences {
             try (BufferedReader reader = new BufferedReader(new FileReader(getPreferencesFile()))) {
                 propertiesLoaded = true;
                 properties.load(reader);
-            } 
+            }
             catch (IOException e) {
                 if (LOGGER.isLoggable(Level.WARNING)) {
                     LOGGER.warning("could not load preferences (" + e.toString() + ")");
@@ -92,7 +99,21 @@ public class GCPreferences {
             }
         }
     }
-    
+
+    public void load(String propertiesAsString) {
+        if ( propertiesAsString!= null) {
+            try  {
+                propertiesLoaded = true;
+                properties.load(new StringReader(propertiesAsString));
+            }
+            catch (IOException e) {
+                if (LOGGER.isLoggable(Level.WARNING)) {
+                    LOGGER.warning("could not load preferences (" + e.toString() + ")");
+                }
+            }
+        }
+    }
+
     public boolean isPropertiesLoaded() {
         return propertiesLoaded;
     }
@@ -137,7 +158,7 @@ public class GCPreferences {
     public void setWindowX(int value) {
         properties.setProperty(WINDOW_X, Integer.toString(value));
     }
-    
+
     public int getWindowY() {
         return getIntValue(WINDOW_Y, WINDOW_Y_DEFAULT);
     }
@@ -173,6 +194,23 @@ public class GCPreferences {
         } while (filename != null);
         
         return recentFiles;
+    }
+
+    public Date getGCLogStartDateTime() {
+        String date = properties.getProperty(GCLOG_START_DATETIME);
+        if (date != null) {
+            try {
+                return GC_LOG_FILE_START_DATE_FORMAT.parse(date);
+            }
+            catch (ParseException e) {
+                LOGGER.warning("Could not parse date: " + date + " " + e.getMessage());
+                return null;
+            }
+        }
+        return null;
+    }
+    public void setGCLogStartDateTime(String value) {
+        properties.setProperty(GCLOG_START_DATETIME, value);
     }
     
     public boolean getGcLineProperty(String key) {

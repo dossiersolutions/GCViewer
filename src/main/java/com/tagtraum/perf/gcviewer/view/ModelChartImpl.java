@@ -390,6 +390,10 @@ public class ModelChartImpl extends JScrollPane implements ModelChart, ChangeLis
     public void setModel(GCModel model, GCPreferences preferences) {
         this.model = model;
 
+        if (preferences.getGCLogStartDateTime() != null) {
+            this.timeOffsetPanel.setDate(preferences.getGCLogStartDateTime());
+        }
+
         if (model.getFirstDateStamp() != null) {
             this.timeOffsetPanel.setDate(new Date(model.getFirstDateStamp().toInstant().toEpochMilli()));
         }
