@@ -184,9 +184,9 @@
     </properties>
 
     <scm>
-        <url>https://github.com/chewiebug/GCViewer</url>
-        <connection>scm:git:git://github.com/chewiebug/GCViewer.git</connection>
-        <developerConnection>scm:git:ssh://github.com/chewiebug/GCViewer.git</developerConnection>
+        <url>https://github.com/dossiersolutions/GCViewer</url>
+        <connection>scm:git:git://github.com/dossiersolutions/GCViewer.git</connection>
+        <developerConnection>scm:git:ssh://github.com/dossiersolutions/GCViewer.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
